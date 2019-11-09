@@ -4,26 +4,41 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
-    public float speed = 5.0f;
-    public float turnSpeed;
-    public float horizontalInput;
-    public float forwardInput;
+    private float speed = 10.0f;
+    private Rigidbody playerRB;
+    private float zBound = 10;
+    private float xBound = 10;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        playerRB = GetComponent<Rigidbody>();
     }
-
 
     // Update is called once per frame
     void Update()
     {
-        horizontalInput = Input.GetAxis("Horizontal");
-        forwardInput = Input.GetAxis("Vertical");
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
 
-        transform.Translate(Vector3.forward * Time.deltaTime * speed * forwardInput);
-        transform.Rotate(Vector3.up, turnSpeed * horizontalInput * Time.deltaTime);
+        playerRB.AddForce(Vector3.right * speed * verticalInput);
+        playerRB.AddForce(Vector3.forward * speed * horizontalInput);
+        
+        if(transform.position.z > zBound)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, zBound);
+        }
+        if(transform.position.z < -zBound)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, -zBound);
+        }
+        if (transform.position.z < -xBound)
+        {
+            transform.position = new Vector3(transform.position.z, transform.position.y, -xBound);
+        }
+        if (transform.position.z > xBound)
+        {
+            transform.position = new Vector3(transform.position.z, transform.position.y, xBound);
+        }
     }
 }
